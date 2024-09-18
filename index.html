@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valorant Tracker</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="containerindex">
+  <h1>Valorant Tracker</h1>
+  <form id="playerForm">
+    <input type="text" id="usernameTag" class="search-input" placeholder="Username#Tag" value="">
+    <button type="submit" class="search-button"><img src="search.png" width="15spx" height="15px" style="margin-left: auto; margin-right: auto"></button>
+  </form>
+</div>
+
+<script>
+  document.getElementById('playerForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const usernameTag = document.getElementById('usernameTag').value.trim();
+
+    if (!usernameTag) {
+      alert('Please enter a Username#Tag');
+      return;
+    }
+
+    const [username, tag] = usernameTag.split('#');
+    const API_KEY = 'HDEV-22e52e9e-90d4-4246-b795-46b4f10589b4';
+    const API_URL = `https://api.henrikdev.xyz/valorant/v2/account/${username}/${tag}?api_key=${API_KEY}`;
+
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data.status === 200) {
+        window.location.href = `profile.html?usernameTag=${encodeURIComponent(usernameTag)}`;
+      } else {
+        alert('Player not found or API error.');
+      }
+    } catch (error) {
+      alert('Error fetching player stats: ' + error.message);
+    }
+  });
+</script>
+</body>
+</html>

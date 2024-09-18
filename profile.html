@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Player Profile</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="getPlayerStats()">
+
+<div class="container">
+  <div class="searchbar">
+
+    <form id="playerForm">
+      <p>search another player</p>
+      <input type="text" id="usernameTag" placeholder="Username#Tag" class="search">
+    <!--    <button type="submit">Get Stats</button>-->
+    </form></div>
+
+
+  <div class="info">
+    <div id="result"></div>
+    <div id="result2"></div>
+    <div id="lastupdate"></div>
+    <div id="storedMatches"></div>
+  </div>
+</div>
+
+<div id="rank" class="rankbox"></div>
+
+<script>
+  const rankImages = {
+    "Iron 1": "rank_png/Iron_1_Rank.png",
+    "Iron 2": "rank_png/Iron_2_Rank.png",
+    "Iron 3": "rank_png/Iron_3_Rank.png",
+    "Bronze 1": "rank_png/Bronze_1_Rank.png",
+    "Bronze 2": "rank_png/Bronze_2_Rank.png",
+    "Bronze 3": "rank_png/Bronze_3_Rank.png",
+    "Silver 1": "rank_png/Silver_1_Rank.png",
+    "Silver 2": "rank_png/Silver_2_Rank.png",
+    "Silver 3": "rank_png/Silver_3_Rank.png",
+    "Gold 1": "rank_png/Gold_1_Rank.png",
+    "Gold 2": "rank_png/Gold_2_Rank.png",
+    "Gold 3": "rank_png/Gold_3_Rank.png",
+    "Platinum 1": "rank_png/Platinum_1_Rank.png",
+    "Platinum 2": "rank_png/Platinum_2_Rank.png",
+    "Platinum 3": "rank_png/Platinum_3_Rank.png",
+    "Diamond 1": "rank_png/Diamond_1_Rank.png",
+    "Diamond 2": "rank_png/Diamond_2_Rank.png",
+    "Diamond 3": "rank_png/Diamond_3_Rank.png",
+    "Ascendant 1": "rank_png/Ascendant_1_Rank.png",
+    "Ascendant 2": "rank_png/Ascendant_2_Rank.png",
+    "Ascendant 3": "rank_png/Ascendant_3_Rank.png",
+    "Immortal 1": "rank_png/Immortal_1_Rank.png",
+    "Immortal 2": "rank_png/Immortal_2_Rank.png",
+    "Immortal 3": "rank_png/Immortal_3_Rank.png",
+    "Radiant": "rank_png/Radiant_Rank.png"
+  };
+
+  function getPlayerStats() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const usernameTag = urlParams.get('usernameTag');
+    if (usernameTag) {
+      const [username, tag] = usernameTag.split('#');
+      fetchPlayerStats(username, tag);
+    }
+  }
+
+  async function fetchPlayerStats(username, tag) {
+    const API_KEY = 'HDEV-22e52e9e-90d4-4246-b795-46b4f10589b4';
+    const API_URL = `https://api.henrikdev.xyz/valorant/v2/account/${username}/${tag}?api_key=${API_KEY}`;
+
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data.status === 200) {
+        document.getElementById('result').innerHTML = `
+          <p>Player: ${data.data.name}#${data.data.tag}</p>
+          <p>Region: ${data.data.region}</p>
+          <p>Account Level: ${data.data.account_level}</p>
+
+        `;
+        document.getElementById('lastupdate').innerHTML = `
+          <p>Last Updated: ${data.data.updated_at}</p>
+        `;
+
+        getPlayerRank(username, tag, 'eu', 'pc'); // Adjust the region and platform as needed
+      } else {
+        document.getElementById('result').innerHTML = '<p>Player not found or API error.</p>';
+      }
+    } catch (error) {
+      document.getElementById('result').innerHTML = `<p>Error fetching player stats: ${error.message}</p>`;
+      console.error('Error fetching player stats:', error);
+    }
+  }
+
+  async function getPlayerRank(username, tag, region, platform) {
+    const API_KEY = 'HDEV-22e52e9e-90d4-4246-b795-46b4f10589b4';
+    const API_URL = `https://api.henrikdev.xyz/valorant/v3/mmr/${region}/${platform}/${username}/${tag}?api_key=${API_KEY}`;
+
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Player not found. Please check the username and tag.');
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+      const data = await response.json();
+
+      if (data.status === 200) {
+        const currentRankImage = rankImages[data.data.current.tier.name];
+        const peakRankImage = rankImages[data.data.peak.tier.name];
+
+        document.getElementById('result2').innerHTML = `
+
+          <p>Region: ${region}</p>
+          <p>Last Change: ${data.data.current.last_change}</p>
+          <p>ELO: ${data.data.current.elo}</p>
+        `;
+        document.getElementById('rank').innerHTML = `
+          <p class="text">Current Rating</p>
+                        <div class="ranksimg">
+      <div class="image">
+        <img src="${currentRankImage}" alt="${data.data.current.tier.name}" class="rank-image">
+      </div>
+      <div>
+        <b>${data.data.current.tier.name}</b>
+      </div>
+    </div>
+
+          <hr>
+          <p class="text"   >Peak Rating</p>
+
+
+              <div class="ranksimg">
+      <div class="image">
+        <img src="${peakRankImage}" alt="${data.data.peak.tier.name}" class="rank-image">
+      </div>
+      <div>
+        <b>${data.data.peak.tier.name}</b>
+      </div>
+    </div>
+        `;
+      } else {
+        document.getElementById('result2').innerHTML = '<p>Player not found or API error.</p>';
+      }
+    } catch (error) {
+      document.getElementById('result2').innerHTML = `<p>Error fetching player rank: ${error.message}</p>`;
+      console.error('Error fetching player rank:', error);
+    }
+  }
+  document.getElementById('playerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const usernameTag = document.getElementById('usernameTag').value;
+    window.location.href = `profile.html?usernameTag=${encodeURIComponent(usernameTag)}`;
+  });
+</script>
+</body>
+</html>

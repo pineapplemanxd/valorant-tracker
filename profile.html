@@ -26,7 +26,7 @@
 </div>
 
 <div id="rank" class="rankbox"></div>
-
+<script src="js/config.js"></script>
 <script>
   const rankImages = {
     "Iron 1": "rank_png/Iron_1_Rank.png",
@@ -66,7 +66,7 @@
   }
 
   async function fetchPlayerStats(username, tag) {
-    const API_KEY = 'HDEV-22e52e9e-90d4-4246-b795-46b4f10589b4';
+
     const API_URL = `https://api.henrikdev.xyz/valorant/v2/account/${username}/${tag}?api_key=${API_KEY}`;
 
     try {
@@ -98,7 +98,7 @@
   }
 
   async function getPlayerRank(username, tag, region, platform) {
-    const API_KEY = 'HDEV-22e52e9e-90d4-4246-b795-46b4f10589b4';
+
     const API_URL = `https://api.henrikdev.xyz/valorant/v3/mmr/${region}/${platform}/${username}/${tag}?api_key=${API_KEY}`;
 
     try {

@@ -36,3 +36,7 @@ Thumbs.db
 *.backup
 *.orig
 *.rej
+
+webpack.common.js
+webpack.config.dev.js
+webpack.config.prod.js

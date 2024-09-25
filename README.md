@@ -13,7 +13,7 @@ Follow these steps to install and set up the project:
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/your-username/valorant-tracker.git
+    git clone https://github.com/pineapplemanxd/valorant-tracker.git
     ```
 
 2. Navigate to the project directory:

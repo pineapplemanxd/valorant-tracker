@@ -56,12 +56,7 @@
     }
 
     const [username, tag] = usernameTag.split('#');
-    if (!username || !tag) {
-      alert('Invalid Username#Tag format');
-      return;
-    }
-
-    const API_URL = `https://api.henrikdev.xyz/valorant/v2/account/${encodeURIComponent(username)}/${encodeURIComponent(tag)}?api_key=${API_KEY}`;
+    const API_URL = `https://api.henrikdev.xyz/valorant/v2/account/${username}/${tag}?api_key=${API_KEY}`;
 
     try {
       const response = await fetch(API_URL);
@@ -77,7 +72,6 @@
       }
     } catch (error) {
       alert('Error fetching player stats: ' + error.message);
-      console.error('Error fetching player stats:', error);
     }
   });
 

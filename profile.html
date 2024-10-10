@@ -78,13 +78,13 @@
 
       if (data.status === 200) {
         document.getElementById('result').innerHTML = `
-          <p>Player: ${data.data.name}#${data.data.tag}</p>
-          <p>Region: ${data.data.region}</p>
-          <p>Account Level: ${data.data.account_level}</p>
+          <p class="scaleup">Player: ${data.data.name}#${data.data.tag}</p>
+          <p class="scaleup">Region: ${data.data.region}</p>
+          <p class="scaleup">Account Level: ${data.data.account_level}</p>
 
         `;
         document.getElementById('lastupdate').innerHTML = `
-          <p>Last Updated: ${data.data.updated_at}</p>
+          <p class="scaleup">Last Updated: ${data.data.updated_at}</p>
         `;
 
         getPlayerRank(username, tag, 'eu', 'pc'); // Adjust the region and platform as needed
@@ -118,9 +118,9 @@
 
         document.getElementById('result2').innerHTML = `
 
-          <p>Region: ${region}</p>
-          <p>Last Change: ${data.data.current.last_change}</p>
-          <p>ELO: ${data.data.current.elo}</p>
+          <p class="scaleup">Region: ${region}</p>
+          <p class="scaleup">Last Change: ${data.data.current.last_change}</p>
+          <p class="scaleup">ELO: ${data.data.current.elo}</p>
         `;
         document.getElementById('rank').innerHTML = `
           <p class="text">Current Rating</p>
